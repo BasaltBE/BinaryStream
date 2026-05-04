@@ -1,4 +1,6 @@
-﻿using Basalt.BinaryStream.Enums;
+﻿using System.Buffers.Binary;
+
+using Basalt.BinaryStream.Enums;
 
 namespace Basalt.BinaryStream.Types.Unsigned;
 
@@ -12,32 +14,10 @@ public class UInt64Type : DataType<ulong>
     if (stream.offset + 8 > stream.buffer.Length)
       throw new Exception("Not enough data to read");
 
-    // Prepare a value to hold the result
-    ulong value;
-
     // Read the bytes based on the specified endianness
-    if (endian == Endianness.Big)
-    {
-      value = ((ulong)stream.buffer[stream.offset] << 56) |
-              ((ulong)stream.buffer[stream.offset + 1] << 48) |
-              ((ulong)stream.buffer[stream.offset + 2] << 40) |
-              ((ulong)stream.buffer[stream.offset + 3] << 32) |
-              ((ulong)stream.buffer[stream.offset + 4] << 24) |
-              ((ulong)stream.buffer[stream.offset + 5] << 16) |
-              ((ulong)stream.buffer[stream.offset + 6] << 8) |
-              stream.buffer[stream.offset + 7];
-    }
-    else // Little Endian
-    {
-      value = stream.buffer[stream.offset] |
-              ((ulong)stream.buffer[stream.offset + 1] << 8) |
-              ((ulong)stream.buffer[stream.offset + 2] << 16) |
-              ((ulong)stream.buffer[stream.offset + 3] << 24) |
-              ((ulong)stream.buffer[stream.offset + 4] << 32) |
-              ((ulong)stream.buffer[stream.offset + 5] << 40) |
-              ((ulong)stream.buffer[stream.offset + 6] << 48) |
-              ((ulong)stream.buffer[stream.offset + 7] << 56);
-    }
+    ulong value = endian == Endianness.Big
+      ? BinaryPrimitives.ReadUInt64BigEndian(stream.buffer.AsSpan(stream.offset, 8))
+      : BinaryPrimitives.ReadUInt64LittleEndian(stream.buffer.AsSpan(stream.offset, 8));
 
     // Advance the offset by 8 bytes after reading
     stream.offset += 8;
@@ -60,25 +40,11 @@ public class UInt64Type : DataType<ulong>
     // Write the bytes to the buffer based on the specified endianness
     if (endian == Endianness.Big)
     {
-      stream.buffer[stream.offset] = (byte)(value >> 56); // Highest byte
-      stream.buffer[stream.offset + 1] = (byte)((value >> 48) & 0xFF);
-      stream.buffer[stream.offset + 2] = (byte)((value >> 40) & 0xFF);
-      stream.buffer[stream.offset + 3] = (byte)((value >> 32) & 0xFF);
-      stream.buffer[stream.offset + 4] = (byte)((value >> 24) & 0xFF);
-      stream.buffer[stream.offset + 5] = (byte)((value >> 16) & 0xFF);
-      stream.buffer[stream.offset + 6] = (byte)((value >> 8) & 0xFF);
-      stream.buffer[stream.offset + 7] = (byte)(value & 0xFF); // Lowest byte
+      BinaryPrimitives.WriteUInt64BigEndian(stream.buffer.AsSpan(stream.offset, 8), value);
     }
     else // Little Endian
     {
-      stream.buffer[stream.offset] = (byte)(value & 0xFF); // Lowest byte
-      stream.buffer[stream.offset + 1] = (byte)((value >> 8) & 0xFF);
-      stream.buffer[stream.offset + 2] = (byte)((value >> 16) & 0xFF);
-      stream.buffer[stream.offset + 3] = (byte)((value >> 24) & 0xFF);
-      stream.buffer[stream.offset + 4] = (byte)((value >> 32) & 0xFF);
-      stream.buffer[stream.offset + 5] = (byte)((value >> 40) & 0xFF);
-      stream.buffer[stream.offset + 6] = (byte)((value >> 48) & 0xFF);
-      stream.buffer[stream.offset + 7] = (byte)(value >> 56); // Highest byte
+      BinaryPrimitives.WriteUInt64LittleEndian(stream.buffer.AsSpan(stream.offset, 8), value);
     }
 
     // Advance the offset by 8 bytes after writing

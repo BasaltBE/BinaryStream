@@ -1,4 +1,6 @@
-﻿using Basalt.BinaryStream.Enums;
+﻿using System.Buffers.Binary;
+
+using Basalt.BinaryStream.Enums;
 
 namespace Basalt.BinaryStream.Types.Unsigned;
 
@@ -12,23 +14,15 @@ public class UInt16Type : DataType<ushort>
     if (stream.offset + 2 > stream.buffer.Length)
       throw new Exception("Not enough data to read");
 
-    // Prepare a value to hold the result
-    ushort value = 0;
-
     // Read the bytes based on the specified endianness
-    if (endian == Endianness.Big)
-    {
-      value = (ushort)((stream.buffer[stream.offset] << 8) | stream.buffer[stream.offset + 1]);
-    }
-    else // Little Endian
-    {
-      value = (ushort)(stream.buffer[stream.offset] | (stream.buffer[stream.offset + 1] << 8));
-    }
+    ushort value = endian == Endianness.Big
+      ? BinaryPrimitives.ReadUInt16BigEndian(stream.buffer.AsSpan(stream.offset, 2))
+      : BinaryPrimitives.ReadUInt16LittleEndian(stream.buffer.AsSpan(stream.offset, 2));
 
     // Advance the offset by 2 bytes after reading
     stream.offset += 2;
 
-    // Return the read value as ushort (since UInt16 is unsigned, we can directly return the ushort value)
+    // Return the read value as ushort
     return value;
   }
 
@@ -46,13 +40,11 @@ public class UInt16Type : DataType<ushort>
     // Write the bytes to the buffer based on the specified endianness
     if (endian == Endianness.Big)
     {
-      stream.buffer[stream.offset] = (byte)(value >> 8); // High byte
-      stream.buffer[stream.offset + 1] = (byte)(value & 0xFF); // Low byte
+      BinaryPrimitives.WriteUInt16BigEndian(stream.buffer.AsSpan(stream.offset, 2), value);
     }
     else // Little Endian
     {
-      stream.buffer[stream.offset] = (byte)(value & 0xFF); // Low byte
-      stream.buffer[stream.offset + 1] = (byte)(value >> 8); // High byte
+      BinaryPrimitives.WriteUInt16LittleEndian(stream.buffer.AsSpan(stream.offset, 2), value);
     }
 
     // Advance the offset by 2 bytes after writing

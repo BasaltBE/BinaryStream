@@ -1,4 +1,6 @@
-﻿using Basalt.BinaryStream.Enums;
+﻿using System.Buffers.Binary;
+
+using Basalt.BinaryStream.Enums;
 
 namespace Basalt.BinaryStream.Types.Unsigned;
 
@@ -12,24 +14,10 @@ public class UInt32Type : DataType<uint>
     if (stream.offset + 4 > stream.buffer.Length)
       throw new Exception("Not enough data to read");
 
-    // Prepare a value to hold the result
-    uint value;
-
     // Read the bytes based on the specified endianness
-    if (endian == Endianness.Big)
-    {
-      value = (uint)((stream.buffer[stream.offset] << 24) |
-                     (stream.buffer[stream.offset + 1] << 16) |
-                     (stream.buffer[stream.offset + 2] << 8) |
-                     stream.buffer[stream.offset + 3]);
-    }
-    else // Little Endian
-    {
-      value = (uint)(stream.buffer[stream.offset] |
-                     (stream.buffer[stream.offset + 1] << 8) |
-                     (stream.buffer[stream.offset + 2] << 16) |
-                     (stream.buffer[stream.offset + 3] << 24));
-    }
+    uint value = endian == Endianness.Big
+      ? BinaryPrimitives.ReadUInt32BigEndian(stream.buffer.AsSpan(stream.offset, 4))
+      : BinaryPrimitives.ReadUInt32LittleEndian(stream.buffer.AsSpan(stream.offset, 4));
 
     // Advance the offset by 4 bytes after reading
     stream.offset += 4;
@@ -52,17 +40,11 @@ public class UInt32Type : DataType<uint>
     // Write the bytes to the buffer based on the specified endianness
     if (endian == Endianness.Big)
     {
-      stream.buffer[stream.offset] = (byte)(value >> 24); // Highest byte
-      stream.buffer[stream.offset + 1] = (byte)((value >> 16) & 0xFF); // High byte
-      stream.buffer[stream.offset + 2] = (byte)((value >> 8) & 0xFF); // Low byte
-      stream.buffer[stream.offset + 3] = (byte)(value & 0xFF); // Lowest byte
+      BinaryPrimitives.WriteUInt32BigEndian(stream.buffer.AsSpan(stream.offset, 4), value);
     }
     else // Little Endian
     {
-      stream.buffer[stream.offset] = (byte)(value & 0xFF); // Lowest byte
-      stream.buffer[stream.offset + 1] = (byte)((value >> 8) & 0xFF); // Low byte
-      stream.buffer[stream.offset + 2] = (byte)((value >> 16) & 0xFF); // High byte
-      stream.buffer[stream.offset + 3] = (byte)(value >> 24); // Highest byte
+      BinaryPrimitives.WriteUInt32LittleEndian(stream.buffer.AsSpan(stream.offset, 4), value);
     }
 
     // Advance the offset by 4 bytes after writing
