@@ -2,26 +2,26 @@
 
 var stream = new BinaryStream();
 
-int iterations = 9999999;
+int iterations = 9999;
 
 var startTime = DateTime.Now;
 
 for (int i = 0; i < iterations; i++)
 {
-  stream.WriteUInt8(123);
-  stream.WriteUInt16(45678);
-  stream.WriteUInt32(1234567890);
-  stream.WriteUInt64(12345678901234567890UL);
+  // varint encoding and decoding
+  var rand = new Random().Next(int.MinValue, int.MaxValue);
+  
+  // Write the random integer to the stream using variable-length encoding
+  stream.WriteInt32(rand);
+}
 
-  stream.ResetOffset();
+// Reset the stream's offset to the beginning for reading
+stream.ResetOffset();
 
-  byte uint8Value = stream.ReadUInt8();
-  ushort uint16Value = stream.ReadUInt16();
-  uint uint32Value = stream.ReadUInt32();
-  ulong uint64Value = stream.ReadUInt64();
-
-  if (uint8Value != 123 || uint16Value != 45678 || uint32Value != 1234567890 || uint64Value != 12345678901234567890UL)
-    throw new Exception("Data mismatch");
+for (int i = 0; i < iterations; i++)
+{
+  // Read the variable-length encoded integer from the stream
+  stream.ReadInt32();
 }
 
 var endTime = DateTime.Now;

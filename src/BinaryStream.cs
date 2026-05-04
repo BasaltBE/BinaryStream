@@ -102,4 +102,44 @@ public class BinaryStream
   {
     Int64Type.Write(this, value, endian);
   }
+
+  public uint ReadUVarInt()
+  {
+    return UVarIntType.Read(this);
+  }
+
+  public void WriteUVarInt(uint value)
+  {
+    UVarIntType.Write(this, value);
+  }
+
+  public int ReadVarInt()
+  {
+    return VarIntType.Read(this);
+  }
+
+  public void WriteVarInt(int value)
+  {
+    VarIntType.Write(this, value);
+  }
+
+  public ulong ReadUVarLong()
+  {
+    return UVarLongType.Read(this);
+  }
+
+  public void WriteUVarLong(ulong value)
+  {
+    UVarLongType.Write(this, value);
+  }
+
+  public long ReadVarLong()
+  {
+    return VarLongType.Read(this);
+  }
+
+  public void WriteVarLong(long value)
+  {
+    VarLongType.Write(this, value);
+  }
 }
