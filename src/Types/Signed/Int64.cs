@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 
 using Basalt.BinaryStream.Enums;
 
-namespace Basalt.BinaryStream.Types.Unsigned;
+namespace Basalt.BinaryStream.Types.Signed;
 
 public class Int64Type : DataType<long>
 {

@@ -1,5 +1,6 @@
 ﻿using Basalt.BinaryStream.Enums;
 using Basalt.BinaryStream.Types.Signed;
+using Basalt.BinaryStream.Types.Strings;
 using Basalt.BinaryStream.Types.Unsigned;
 
 namespace Basalt.BinaryStream;
@@ -141,5 +142,35 @@ public class BinaryStream
   public void WriteVarLong(long value)
   {
     VarLongType.Write(this, value);
+  }
+
+  public string ReadString16(Endianness endian = Endianness.Big)
+  {
+    return String16Type.Read(this, endian);
+  }
+
+  public void WriteString16(string value, Endianness endian = Endianness.Big)
+  {
+    String16Type.Write(this, value, endian);
+  }
+
+  public string ReadString32(Endianness endian = Endianness.Big)
+  {
+    return String32Type.Read(this, endian);
+  }
+
+  public void WriteString32(string value, Endianness endian = Endianness.Big)
+  {
+    String32Type.Write(this, value, endian);
+  }
+
+  public string ReadVarString()
+  {
+    return VarStringType.Read(this);
+  }
+
+  public void WriteVarString(string value)
+  {
+    VarStringType.Write(this, value);
   }
 }

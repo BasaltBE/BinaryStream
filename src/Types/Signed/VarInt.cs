@@ -1,4 +1,6 @@
-namespace Basalt.BinaryStream.Types.Unsigned;
+using Basalt.BinaryStream.Types.Unsigned;
+
+namespace Basalt.BinaryStream.Types.Signed;
 
 public class VarIntType : DataType<int>
 {
