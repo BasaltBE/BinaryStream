@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basalt.BinaryStream", "src\Basalt.BinaryStream.csproj", "{A537FC37-61AA-C9D1-E839-C175F3D2F3AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basalt.BinaryStream.Test", "test\Basalt.BinaryStream.Test.csproj", "{16784096-A2EE-F611-FEBC-13C07D4D86EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A537FC37-61AA-C9D1-E839-C175F3D2F3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A537FC37-61AA-C9D1-E839-C175F3D2F3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A537FC37-61AA-C9D1-E839-C175F3D2F3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A537FC37-61AA-C9D1-E839-C175F3D2F3AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16784096-A2EE-F611-FEBC-13C07D4D86EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16784096-A2EE-F611-FEBC-13C07D4D86EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16784096-A2EE-F611-FEBC-13C07D4D86EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16784096-A2EE-F611-FEBC-13C07D4D86EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
